@@ -37,8 +37,11 @@ namespace IntelligentScissors
                         {
                             foreach (var item in graph.graph[key])
                             {
-
+                               
+                                Console.WriteLine("Node : " + i);
                                 Console.WriteLine("Vertex : " + key + "Edge : " + item.edge);
+                                Console.WriteLine("Vertex : " + key + "weight : " + item.weight);
+
 
                             }
                         }
