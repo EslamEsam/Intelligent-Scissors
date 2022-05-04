@@ -13,6 +13,7 @@ namespace IntelligentScissors
         public string edge;
     }
     
+    // graph making 
     internal class Graph
     {
         public Dictionary<string, List<edge_weight>> graph = new Dictionary<string, List<edge_weight>>();
