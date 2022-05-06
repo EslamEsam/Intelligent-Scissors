@@ -60,9 +60,8 @@ namespace IntelligentScissors
                         int j2 = int.Parse(sj2);
                         if (!reachedShortestPath[i2, j2])
                         {
-                            if (item.weight == double.PositiveInfinity)
+                            if (item.weight == double.PositiveInfinity && parent[i2, j2]==null)
                                 parent[i2, j2] = vertex.edge;
-
                             else
                             {
                                 double old_distance = distance[i1, j1];
