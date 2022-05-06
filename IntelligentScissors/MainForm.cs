@@ -59,7 +59,8 @@ namespace IntelligentScissors
             Console.WriteLine("X : " + point.X + " Y : " + point.Y);
             img.SetPixel((int)point.X, (int)point.Y, Color.Red);
             double[,] distance = new double[ImageOperations.GetHeight(ImageMatrix), ImageOperations.GetWidth(ImageMatrix)];
-            ShortestPath sp = new ShortestPath();
+            //ShortestPath sp = new ShortestPath();
+            SP sp = new SP();
             pictureBox2.Image = img;
             string[,] parent = new string[ImageOperations.GetHeight(ImageMatrix), ImageOperations.GetWidth(ImageMatrix)];
             parent = sp.calculateShortestPath(point, graph.graph, ref distance);
@@ -68,7 +69,7 @@ namespace IntelligentScissors
                 for (int j = 0; j < parent.GetLength(1); j++)
                 {
                     Console.WriteLine("Parent : " + parent[i, j]);
-                    //Console.WriteLine("Distance : " + distance[i, j]);
+                    Console.WriteLine("Distance : " + distance[i, j]);
                 }
             }
             Console.WriteLine("Last Value = " + double.MaxValue);
