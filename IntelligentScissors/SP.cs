@@ -18,7 +18,6 @@ namespace IntelligentScissors
             PriorityQueue priorityQueue = new PriorityQueue();
             
             string start = p.X.ToString() + "," + p.Y.ToString();
-            Console.WriteLine("before adding to queue");
             if (graph.ContainsKey(start))
             {
                 edge_weight root;
