@@ -50,7 +50,6 @@ namespace IntelligentScissors
                     int i1 = int.Parse(si1);
                     string sj1 = vertex.edge.Substring(vertex.edge.IndexOf(",") + 1);
                     int j1 = int.Parse(sj1);
-                    double dis_weight = vertex.weight;
                     reachedShortestPath[i1, j1] = true;
                     foreach (var item in graph[vertex.edge])
                     {
@@ -64,7 +63,6 @@ namespace IntelligentScissors
                                 parent[i2, j2] = vertex.edge;
                             else
                             {
-                                double old_distance = distance[i1, j1];
                                 double newDistance = distance[i1, j1] + item.weight;
                                 if ((newDistance < distance[i2, j2]))
                                 {
