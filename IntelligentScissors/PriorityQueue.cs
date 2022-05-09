@@ -81,11 +81,11 @@ namespace IntelligentScissors
             return vertices.Count();
         }
 
-        public bool ContainsItem(edge_weight vertex)
+        public bool ContainsItem(string vertex)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
-                if (vertex.edge == vertices[i].edge)
+                if (vertex == vertices[i].edge)
                 {
                     return true;
                 }

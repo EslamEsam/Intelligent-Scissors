@@ -9,11 +9,10 @@ namespace IntelligentScissors
 {
     class SP
     {
-        public string[,] calculateShortestPath(Point p, Dictionary<string, List<edge_weight>> graph, ref double[,] d)
+        public string[,] calculateShortestPath(Point p, Dictionary<string, List<edge_weight>> graph, ref double[,] distance)
         {
-            string[,] parent = new string[d.GetLength(0), d.GetLength(1)];
-            double[,] distance = new double[d.GetLength(0), d.GetLength(1)];
-            bool[,] reachedShortestPath = new bool[d.GetLength(0), d.GetLength(1)];
+            string[,] parent = new string[distance.GetLength(0), distance.GetLength(1)];
+            bool[,] reachedShortestPath = new bool[distance.GetLength(0), distance.GetLength(1)];
 
             PriorityQueue priorityQueue = new PriorityQueue();
             
@@ -76,7 +75,6 @@ namespace IntelligentScissors
                 }
 
             }
-            d = distance;
             return parent;
 
         }
