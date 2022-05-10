@@ -52,12 +52,7 @@ namespace IntelligentScissors
                     backtrack_points.Add(LastPoint);
                 }
             }
-            //while (!(LastPoint == "null") || !(string.IsNullOrEmpty(LastPoint)))
-            //{
-                //if (LastPoint == "null" || string.IsNullOrEmpty(LastPoint))
-                //{
-                //    break;
-                //}
+            
 
            
             return backtrack_points;

@@ -52,13 +52,13 @@ namespace IntelligentScissors
             global_img = img;
         }
         
-        bool lineDraw = false;
-        Point rec_point = new Point();
+        Point[] anchors = new Point[1000];
+        int anchorsCounter = 0 , clicksCounter = 0;
         public List<string> path = new List<string>();
-        string[,] parents;
 
         private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            clicksCounter++;
             Bitmap img = new Bitmap(FilePath);
             Point cp = PointToClient(Cursor.Position);
             Point point = new Point(cp.X - 17, cp.Y - 17);
@@ -67,115 +67,88 @@ namespace IntelligentScissors
             Graphics graphics = Graphics.FromImage((Image)global_img);
             Pen redPen = new Pen(Color.Red, 1);
             // Show the coordinates of the mouse click on the label, label1.
-            Rectangle rect = new Rectangle(point.X - 2, point.Y - 2, 2, 2);
-            rec_point.X = point.X - 2;
-            rec_point.Y = point.Y - 2;
+            Rectangle rect = new Rectangle(point.X , point.Y , 2, 2);
+            anchors[anchorsCounter].X = point.X ;
+            anchors[anchorsCounter].Y = point.Y ;
+            anchorsCounter++;
             // Draw the rectangle, starting with the given coordinates, on the picture box.
             graphics.DrawRectangle(redPen, rect);
             // draw a line from the center of the rectangle to the mouse
             pictureBox1.Image = global_img;
             pictureBox2.Image = global_img;
-            double[,] distance = new double[ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix)];
-            //ShortestPath sp = new ShortestPath();
-            //SP sp = new SP();
-            //SPtest sp = new SPtest();
-            //Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-            ////parents = new string[ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix)];
-            //shortest_path = sp.calculateShortestPath(point, graph.graph, ref distance); 
-            lineDraw = true;
-            Console.SetBufferSize(Int16.MaxValue - 1, Int16.MaxValue - 1);
-            //for (int i = 0; i < ImageOperations.GetWidth(ImageMatrix); i++)
-            //{
-            //    for (int j = 0; j < ImageOperations.GetHeight(ImageMatrix); j++)
-            //    {
-            //        Console.WriteLine("i : " + i + "j : " + j + " " + parents[i, j] + " ");
-            //        Console.WriteLine("i : " + i + "j : " + j + " " + distance[i, j] + " ");
-            //    }
-            //}
-            //Console.WriteLine("Last Value = " + double.MaxValue);
-            //FileStream sw = new FileStream("outputText.txt", FileMode.OpenOrCreate, FileAccess.Write);
-            //StreamWriter swr = new StreamWriter(sw);
-            //swr.WriteLine("Last Value = " + double.MaxValue);
-            //for (int i = 0; i < parent.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < parent.GetLength(1); j++)
-            //    {
-            //        swr.Write(parent[i, j] + " ");
-
-            //    }
-            //    swr.Write("\n");
-            //}
-
-            //sw.Close();            
-        }
-
-        
-
-        
-
-
-        private void pictureBox1_MouseClick_1(object sender, MouseEventArgs e)
-        {
-            Point cp = PointToClient(Cursor.Position);
-            SPtest sp = new SPtest();
-            Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-            shortest_path = sp.calculateShortestPath(rec_point,cp, graph.graph , 
-                ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
-            Point point = new Point(cp.X - 17, cp.Y - 17);
-            if (lineDraw == true)
+            if (clicksCounter >= 2)
             {
-                Graphics graphics = Graphics.FromImage((Image)global_img);
-                Pen redPen = new Pen(Color.Red, 1);
-                ////Show the coordinates of the mouse click on the label, label1.
-                path = Backtrack.backtrack(shortest_path, point);
-                Point tempPoint = rec_point;
-                for (int i = path.Count-2; i >= 0; i -=2 )
+                SPtest sp = new SPtest();
+                Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
+                shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], graph.graph,
+                ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+                graphics = Graphics.FromImage((Image)global_img);
+                redPen = new Pen(Color.Blue, 1);
+
+                int i_Free = anchors[anchorsCounter - 1].X;
+                int j_Free = anchors[anchorsCounter - 1].Y;
+                string FreePoint = i_Free + "," + j_Free;
+                string LastPoint;
+                if (shortest_path.ContainsKey(FreePoint))
                 {
-                   
-                        
-                    string si_Last = path[i].Substring(0, path[i].IndexOf(","));
-                    int i_Last = int.Parse(si_Last);
-                    string sj_Last = path[i].Substring(path[i].IndexOf(",") + 1);
-                    int j_Last = int.Parse(sj_Last);
-                    point = new Point(i_Last, j_Last);
-                    //Rectangle rect = new Rectangle(point.X - 2, point.Y - 2, 1, 1);
-                    graphics.DrawLine(redPen, tempPoint, point);
-                    pictureBox1.Image = global_img;
-                    tempPoint = point;
-                    
+                    LastPoint = shortest_path[FreePoint].Key;
+                    while (LastPoint != "null")
+                    {
+                        string si_Last = LastPoint.Substring(0, LastPoint.IndexOf(","));
+                        int i_Last = int.Parse(si_Last);
+                        string sj_Last = LastPoint.Substring(LastPoint.IndexOf(",") + 1);
+                        int j_Last = int.Parse(sj_Last);
+                        Point tempPoint = new Point(i_Last, j_Last);
+                        graphics.DrawLine(redPen, point, tempPoint);
+                        pictureBox1.Image = global_img;
+                        LastPoint = shortest_path[LastPoint].Key;
+                        point = tempPoint;
+
+                    }
                 }
-                //foreach (string s in path)
-                //{
-                //    if (!(s.Equals("null")) || !(string.IsNullOrEmpty(s)))
-                //    {
-                //        if (s.Equals("null") || string.IsNullOrEmpty(s))
-                //        {
-                //            continue;
-                //        }
-                //        Point tempPoint = point;
-                //        string si_Last = s.Substring(0, s.IndexOf(","));
-                //        int i_Last = int.Parse(si_Last);
-                //        string sj_Last = s.Substring(s.IndexOf(",") + 1);
-                //        int j_Last = int.Parse(sj_Last);
-                //        point = new Point(i_Last, j_Last);
-                //        //Rectangle rect = new Rectangle(point.X - 2, point.Y - 2, 1, 1);
-                //        graphics.DrawLine(redPen, tempPoint, point);
-                //        pictureBox1.Image = global_img;
-                //    }
-
-                //}
-
-                pictureBox2.Image = global_img;
-                lineDraw = false;
+                Console.SetBufferSize(Int16.MaxValue - 1, Int16.MaxValue - 1);
             }
         }
 
+        private void FinishCropping_Click(object sender, EventArgs e)
+        {
+            SPtest sp = new SPtest();
+            Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
+            shortest_path = sp.calculateShortestPath(anchors[0], anchors[anchorsCounter - 1], graph.graph,
+            ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+            Graphics graphics = Graphics.FromImage((Image)global_img);
+            Pen redPen = new Pen(Color.Red, 1);
+            Point point = anchors[anchorsCounter - 1];
+            int i_Free = anchors[anchorsCounter - 1].X;
+            int j_Free = anchors[anchorsCounter - 1].Y;
+            string FreePoint = i_Free + "," + j_Free;
+            string LastPoint;
+            if (shortest_path.ContainsKey(FreePoint))
+            {
+                LastPoint = shortest_path[FreePoint].Key;
+                while (LastPoint != "null")
+                {
+                    string si_Last = LastPoint.Substring(0, LastPoint.IndexOf(","));
+                    int i_Last = int.Parse(si_Last);
+                    string sj_Last = LastPoint.Substring(LastPoint.IndexOf(",") + 1);
+                    int j_Last = int.Parse(sj_Last);
+                    Point tempPoint = new Point(i_Last, j_Last);
+                    graphics.DrawLine(redPen, point, tempPoint);
+                    pictureBox1.Image = global_img;
+                    LastPoint = shortest_path[LastPoint].Key;
+                    point = tempPoint;
+
+                }
+            }
+        }
+        
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             Point cp = PointToClient(Cursor.Position);
             Point point = new Point(cp.X - 17, cp.Y - 17);
             Cursor_Y.Text = point.Y.ToString();
             Cursor_X.Text = point.X.ToString();
+            
         }
     }
 }
