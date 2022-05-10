@@ -76,10 +76,12 @@ namespace IntelligentScissors
             pictureBox1.Image = global_img;
             pictureBox2.Image = global_img;
             double[,] distance = new double[ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix)];
-            ShortestPath sp = new ShortestPath();
+            //ShortestPath sp = new ShortestPath();
             //SP sp = new SP();
-            parents = new string[ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix)];
-            parents = sp.calculateShortestPath(point, graph.graph, ref distance); 
+            //SPtest sp = new SPtest();
+            //Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
+            ////parents = new string[ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix)];
+            //shortest_path = sp.calculateShortestPath(point, graph.graph, ref distance); 
             lineDraw = true;
             Console.SetBufferSize(Int16.MaxValue - 1, Int16.MaxValue - 1);
             //for (int i = 0; i < ImageOperations.GetWidth(ImageMatrix); i++)
@@ -115,13 +117,17 @@ namespace IntelligentScissors
         private void pictureBox1_MouseClick_1(object sender, MouseEventArgs e)
         {
             Point cp = PointToClient(Cursor.Position);
+            SPtest sp = new SPtest();
+            Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
+            shortest_path = sp.calculateShortestPath(rec_point,cp, graph.graph , 
+                ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
             Point point = new Point(cp.X - 17, cp.Y - 17);
             if (lineDraw == true)
             {
                 Graphics graphics = Graphics.FromImage((Image)global_img);
                 Pen redPen = new Pen(Color.Red, 1);
                 ////Show the coordinates of the mouse click on the label, label1.
-                path = Backtrack.backtrack(parents, point);
+                path = Backtrack.backtrack(shortest_path, point);
                 Point tempPoint = rec_point;
                 for (int i = path.Count-2; i >= 0; i -=2 )
                 {
