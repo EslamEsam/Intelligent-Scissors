@@ -11,6 +11,7 @@ namespace IntelligentScissors
     {
         public double weight;
         public string edge;
+
     }
     
     // graph making 

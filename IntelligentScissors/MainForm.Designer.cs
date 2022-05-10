@@ -67,6 +67,7 @@ namespace IntelligentScissors
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.CursorChanged += new System.EventHandler(this.pictureBox1_CursorChanged);
             this.pictureBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDoubleClick);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
@@ -162,7 +163,7 @@ namespace IntelligentScissors
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(786, 532);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 16);
+            this.label3.Size = new System.Drawing.Size(71, 17);
             this.label3.TabIndex = 4;
             this.label3.Text = "Y Position";
             // 
@@ -171,7 +172,7 @@ namespace IntelligentScissors
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(587, 532);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 16);
+            this.label2.Size = new System.Drawing.Size(71, 17);
             this.label2.TabIndex = 3;
             this.label2.Text = "X Position";
             // 
