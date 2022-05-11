@@ -122,201 +122,196 @@ namespace IntelligentScissors
             if (draw_line == true)
             {
 
-                Console.WriteLine("anchors X : " + anchors[0].X + "anchors Y : " + anchors[0].Y);
                 Point cp = PointToClient(Cursor.Position);
                 Point point = new Point(cp.X - 17, cp.Y - 17);
                 Cursor_Y.Text = point.Y.ToString();
                 Cursor_X.Text = point.X.ToString();
-                // double total_distance = 0;
-                //startanchor = anchors[0].X.ToString() + "," + anchors[0].Y.ToString();
-                //Last_Point = new edge_weight(startanchor, 0);
                 string startanchor = anchors[0].X.ToString() + "," + anchors[0].Y.ToString();
-
-                //edge_weight Last_Point = new edge_weight(startanchor , 0);
-                // Dictionary<string, double> Last_point = new Dictionary<string, double>();
-                if (Last_Point.Count > 1)
-                {
-                    Console.WriteLine("  gfhrh  " + startanchor);
-
-                    Console.WriteLine("  gfhrh  " + Last_Point.Count);
-
-                    Console.WriteLine("  gfhrh  " + Last_Point[Last_Point.Count - 2]);
-                }
                 Last_Point.Add(startanchor);
-
-
-                Console.WriteLine("  gfhrh  " + startanchor);
-                Console.WriteLine("  gfhrh  " + Last_Point[anchorsCounter-1]);
-                if (Last_Point.Count == 1)
+                string start;
+                string LastPoint;
+                if(Last_Point.Count == 1)
                 {
-                    if (anchorsCounter >= 1)
+                    start = Last_Point[0];
+                    LastPoint = null;
+                }
+                else if(Last_Point.Count == 3)
+                {
+                   start = Last_Point[Last_Point.Count - 2];
+                    LastPoint = Last_Point[Last_Point.Count - 3];
+                }
+                else
+                {
+                   start = Last_Point[Last_Point.Count - 2];
+                   LastPoint = Last_Point[Last_Point.Count - 4];
+
+
+                }
+               
+                if (anchorsCounter >= 1)
+                {
+                    Dictionary<string, double> point_distance = new Dictionary<string, double>();
+                    if (graph.graph.ContainsKey(start))
                     {
-                        string start = Last_Point[0];
-                        Dictionary<string, double> point_distance = new Dictionary<string, double>();
-                        if (graph.graph.ContainsKey(start))
+                        foreach (var item in graph.graph[start])
                         {
-                            foreach (var item in graph.graph[start])
-                            {
+                            if(!Last_Point.Contains(item.edge))
                                 point_distance.Add(item.edge, item.weight);
 
-                            }
-                            edge_weight min1 = new edge_weight();
-                            min1.weight = double.PositiveInfinity;
-                            edge_weight min2 = new edge_weight();
-                            min2.weight = double.PositiveInfinity;
-                            edge_weight min = new edge_weight();
-
-                            foreach (var item in point_distance)
-                            {
-                                if (item.Value < min1.weight && item.Key != Last_Point[0])
-                                {
-
-                                    min1.edge = item.Key;
-                                    min1.weight = item.Value;
-
-
-                                }
-                                if (min1.weight == item.Value && min1.edge != item.Key && item.Key != Last_Point[0])
-                                {
-                                    min2.edge = item.Key;
-                                    min2.weight = item.Value;
-                                }
-                            }
-                            if (min1.weight == min2.weight)
-                            {
-
-                                string si1 = min1.edge.Substring(0, min1.edge.IndexOf(","));
-                                int i1 = int.Parse(si1);
-                                string sj1 = min1.edge.Substring(min1.edge.IndexOf(",") + 1);
-                                int j1 = int.Parse(sj1);
-                                string si2 = min2.edge.Substring(0, min2.edge.IndexOf(","));
-                                int i2 = int.Parse(si2);
-                                string sj2 = min1.edge.Substring(min2.edge.IndexOf(",") + 1);
-                                int j2 = int.Parse(sj2);
-                                double distance1 = Math.Sqrt((Math.Pow((i1 - (int)point.X), 2)) + (Math.Pow((j1 - (int)point.Y), 2)));
-                                double distance2 = Math.Sqrt((Math.Pow((i2 - (int)point.X), 2)) + (Math.Pow((j2 - (int)point.Y), 2)));
-                                if (distance1 < distance2)
-                                {
-                                    min = min1;
-                                }
-                                else
-                                    min = min2;
-                            }
-                            else
-                                min = min1;
-                            Console.WriteLine("min1 : " + min1.edge + " " + min1.weight);
-                            Console.WriteLine("min2 : " + min2.edge + " " + min2.weight);
-                            Console.WriteLine("min : " + min.edge + " " + min.weight);
-                            Graphics graphics = Graphics.FromImage((Image)global_img);
-                            Pen redPen = new Pen(Color.Red, 1);
-                            string si_Last = min.edge.Substring(0, min.edge.IndexOf(","));
-                            int i_Last = int.Parse(si_Last);
-                            string sj_Last = min.edge.Substring(min.edge.IndexOf(",") + 1);
-                            int j_Last = int.Parse(sj_Last);
-                            Console.WriteLine("i_last = " + i_Last + "  ,  j_last = " + j_Last);
-
-                            Point tempPoint = new Point(i_Last, j_Last);
-                            string si = Last_Point[0].Substring(0, Last_Point[0].IndexOf(","));
-                            int i = int.Parse(si);
-                            string sj = Last_Point[0].Substring(Last_Point[0].IndexOf(",") + 1);
-                            int j = int.Parse(sj);
-                            Console.WriteLine("i = " + i + "  ,  j = " + j);
-
-                            Point start_point = new Point(i, j);
-
-                            graphics.DrawLine(redPen, start_point, tempPoint);
-                            pictureBox1.Image = global_img;
-
-                            Last_Point.Add(min.edge);
                         }
-                    }
-                }
+                        edge_weight min1 = new edge_weight();
+                        min1.weight = double.PositiveInfinity;
+                        edge_weight min2 = new edge_weight();
+                        min2.weight = double.PositiveInfinity;
+                        edge_weight min = new edge_weight();
 
-                if (Last_Point.Count > 1)
-                {
-                    if (anchorsCounter >= 1)
-                    {
-                        string start = Last_Point[Last_Point.Count - 2];
-                        Dictionary<string, double> point_distance = new Dictionary<string, double>();
-                        if (graph.graph.ContainsKey(start))
+                        foreach (var item in point_distance)
                         {
-                            foreach (var item in graph.graph[start])
+                            if (item.Value < min1.weight)
                             {
-                                point_distance.Add(item.edge, item.weight);
+
+                                min1.edge = item.Key;
+                                min1.weight = item.Value;
+
 
                             }
-                            edge_weight min1 = new edge_weight();
-                            min1.weight = double.PositiveInfinity;
-                            edge_weight min2 = new edge_weight();
-                            min2.weight = double.PositiveInfinity;
-                            edge_weight min = new edge_weight();
-
-                            foreach (var item in point_distance)
+                            if (min1.weight == item.Value && min1.edge != item.Key)
                             {
-                                if (item.Value < min1.weight && item.Key != Last_Point[Last_Point.Count-2])
-                                {
-                                    Console.WriteLine("item.key = " + item.Key);
-                                    Console.WriteLine("last point = " + Last_Point[Last_Point.Count - 2]);
-                                    min1.edge = item.Key;
-                                    min1.weight = item.Value;
-
-
-                                }
-                                if (min1.weight == item.Value && min1.edge != item.Key && item.Key != Last_Point[Last_Point.Count - 2])
-                                {
-                                    min2.edge = item.Key;
-                                    min2.weight = item.Value;
-                                }
+                                min2.edge = item.Key;
+                                min2.weight = item.Value;
                             }
-                            if (min1.weight == min2.weight)
-                            {
+                        }
+                        if (min1.weight == min2.weight)
+                        {
 
-                                string si1 = min1.edge.Substring(0, min1.edge.IndexOf(","));
-                                int i1 = int.Parse(si1);
-                                string sj1 = min1.edge.Substring(min1.edge.IndexOf(",") + 1);
-                                int j1 = int.Parse(sj1);
-                                string si2 = min2.edge.Substring(0, min2.edge.IndexOf(","));
-                                int i2 = int.Parse(si2);
-                                string sj2 = min1.edge.Substring(min2.edge.IndexOf(",") + 1);
-                                int j2 = int.Parse(sj2);
-                                double distance1 = Math.Sqrt((Math.Pow((i1 - (int)point.X), 2)) + (Math.Pow((j1 - (int)point.Y), 2)));
-                                double distance2 = Math.Sqrt((Math.Pow((i2 - (int)point.X), 2)) + (Math.Pow((j2 - (int)point.Y), 2)));
-                                if (distance1 < distance2)
-                                {
-                                    min = min1;
-                                }
-                                else
-                                    min = min2;
+                            string si1 = min1.edge.Substring(0, min1.edge.IndexOf(","));
+                            int i1 = int.Parse(si1);
+                            string sj1 = min1.edge.Substring(min1.edge.IndexOf(",") + 1);
+                            int j1 = int.Parse(sj1);
+                            string si2 = min2.edge.Substring(0, min2.edge.IndexOf(","));
+                            int i2 = int.Parse(si2);
+                            string sj2 = min1.edge.Substring(min2.edge.IndexOf(",") + 1);
+                            int j2 = int.Parse(sj2);
+                            double distance1 = Math.Sqrt((Math.Pow((i1 - (int)point.X), 2)) + (Math.Pow((j1 - (int)point.Y), 2)));
+                            double distance2 = Math.Sqrt((Math.Pow((i2 - (int)point.X), 2)) + (Math.Pow((j2 - (int)point.Y), 2)));
+                            if (distance1 < distance2)
+                            {
+                                min = min1;
                             }
                             else
-                                min = min1;
-                            Console.WriteLine("min1 : " + min1.edge + " " + min1.weight);
-                            Console.WriteLine("min2 : " + min2.edge + " " + min2.weight);
-                            Console.WriteLine("min : " + min.edge + " " + min.weight);
-                            Graphics graphics = Graphics.FromImage((Image)global_img);
-                            Pen redPen = new Pen(Color.Red, 1);
-                            string si_Last = min.edge.Substring(0, min.edge.IndexOf(","));
-                            int i_Last = int.Parse(si_Last);
-                            string sj_Last = min.edge.Substring(min.edge.IndexOf(",") + 1);
-                            int j_Last = int.Parse(sj_Last);
-                            Console.WriteLine("i_last = " + i_Last + "  ,  j_last = " + j_Last);
-
-                            Point tempPoint = new Point(i_Last, j_Last);
-                            string si = Last_Point[Last_Point.Count - 2].Substring(0, Last_Point[Last_Point.Count - 2].IndexOf(","));
-                            int i = int.Parse(si);
-                            string sj = Last_Point[Last_Point.Count - 2].Substring(Last_Point[Last_Point.Count - 2].IndexOf(",") + 1);
-                            int j = int.Parse(sj);
-                            Console.WriteLine("i = " + i + "  ,  j = " + j);
-
-                            Point start_point = new Point(i, j);
-
-                            graphics.DrawLine(redPen, start_point, tempPoint);
-                            pictureBox1.Image = global_img;
-
-                            Last_Point.Add(min.edge);
+                            {
+                                min = min2;
+                            }
                         }
+                        else
+                        {
+                            min = min1;
+                        }
+                        
+                        Graphics graphics = Graphics.FromImage((Image)global_img);
+                        Pen redPen = new Pen(Color.Red, 1);
+                        string si_Last = min.edge.Substring(0, min.edge.IndexOf(","));
+                        int i_Last = int.Parse(si_Last);
+                        string sj_Last = min.edge.Substring(min.edge.IndexOf(",") + 1);
+                        int j_Last = int.Parse(sj_Last);
+                        Console.WriteLine("i_last = " + i_Last + "  ,  j_last = " + j_Last);
+                        Point tempPoint = new Point(i_Last, j_Last);
+                        string si = start.Substring(0, start.IndexOf(","));
+                        int i = int.Parse(si);
+                        string sj = start.Substring(start.IndexOf(",") + 1);
+                        int j = int.Parse(sj);
+                        Console.WriteLine("i = " + i + "  ,  j = " + j);
+
+                        Point start_point = new Point(i, j);
+
+                        graphics.DrawLine(redPen, start_point, tempPoint);
+                        pictureBox1.Image = global_img;
+
+                        Last_Point.Add(min.edge);
                     }
                 }
+                
+
+                //if (Last_Point.Count > 1)
+                //{
+                //    if (anchorsCounter >= 1)
+                //    {
+                //        Dictionary<string, double> point_distance = new Dictionary<string, double>();
+                //        if (graph.graph.ContainsKey(start))
+                //        {
+                //            foreach (var item in graph.graph[start])
+                //            {
+                //                if(item.edge != Last_Point[Last_Point.Count - 2])
+                //                    point_distance.Add(item.edge, item.weight);
+
+                //            }
+                //            edge_weight min1 = new edge_weight();
+                //            min1.weight = double.PositiveInfinity;
+                //            edge_weight min2 = new edge_weight();
+                //            min2.weight = double.PositiveInfinity;
+                //            edge_weight min = new edge_weight();
+
+                //            foreach (var item in point_distance)
+                //            {
+                //                if (item.Value < min1.weight )
+                //                {
+                //                    min1.edge = item.Key;
+                //                    min1.weight = item.Value;
+
+
+                //                }
+                //                if (min1.weight == item.Value && min1.edge != item.Key)
+                //                {
+                //                    min2.edge = item.Key;
+                //                    min2.weight = item.Value;
+                //                }
+                //            }
+                //            if (min1.weight == min2.weight)
+                //            {
+
+                //                string si1 = min1.edge.Substring(0, min1.edge.IndexOf(","));
+                //                int i1 = int.Parse(si1);
+                //                string sj1 = min1.edge.Substring(min1.edge.IndexOf(",") + 1);
+                //                int j1 = int.Parse(sj1);
+                //                string si2 = min2.edge.Substring(0, min2.edge.IndexOf(","));
+                //                int i2 = int.Parse(si2);
+                //                string sj2 = min1.edge.Substring(min2.edge.IndexOf(",") + 1);
+                //                int j2 = int.Parse(sj2);
+                //                double distance1 = Math.Sqrt((Math.Pow((i1 - (int)point.X), 2)) + (Math.Pow((j1 - (int)point.Y), 2)));
+                //                double distance2 = Math.Sqrt((Math.Pow((i2 - (int)point.X), 2)) + (Math.Pow((j2 - (int)point.Y), 2)));
+                //                if (distance1 < distance2)
+                //                {
+                //                    min = min1;
+                //                }
+                //                else
+                //                    min = min2;
+                //            }
+                //            else
+                //                min = min1;
+                //           Graphics graphics = Graphics.FromImage((Image)global_img);
+                //            Pen redPen = new Pen(Color.Red, 1);
+                //            string si_Last = min.edge.Substring(0, min.edge.IndexOf(","));
+                //            int i_Last = int.Parse(si_Last);
+                //            string sj_Last = min.edge.Substring(min.edge.IndexOf(",") + 1);
+                //            int j_Last = int.Parse(sj_Last);
+                //            Console.WriteLine("i_last = " + i_Last + "  ,  j_last = " + j_Last);
+
+                //            Point tempPoint = new Point(i_Last, j_Last);
+                //            string si = Last_Point[Last_Point.Count - 2].Substring(0, Last_Point[Last_Point.Count - 2].IndexOf(","));
+                //            int i = int.Parse(si);
+                //            string sj = Last_Point[Last_Point.Count - 2].Substring(Last_Point[Last_Point.Count - 2].IndexOf(",") + 1);
+                //            int j = int.Parse(sj);
+                //            Console.WriteLine("i = " + i + "  ,  j = " + j);
+
+                //            Point start_point = new Point(i, j);
+
+                //            graphics.DrawLine(redPen, start_point, tempPoint);
+                //            pictureBox1.Image = global_img;
+
+                //            Last_Point.Add(min.edge);
+                //        }
+                //    }
+                //}
             }
         }
 
