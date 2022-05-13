@@ -43,7 +43,6 @@ namespace IntelligentScissors
             this.Cursor_Y = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
-            this.FinishCropping = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel1.SuspendLayout();
@@ -53,7 +52,7 @@ namespace IntelligentScissors
             // Cursor_X
             // 
             this.Cursor_X.Enabled = false;
-            this.Cursor_X.Location = new System.Drawing.Point(590, 551);
+            this.Cursor_X.Location = new System.Drawing.Point(586, 687);
             this.Cursor_X.Name = "Cursor_X";
             this.Cursor_X.Size = new System.Drawing.Size(100, 22);
             this.Cursor_X.TabIndex = 1;
@@ -63,10 +62,11 @@ namespace IntelligentScissors
             this.pictureBox1.Location = new System.Drawing.Point(4, 4);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(650, 450);
+            this.pictureBox1.Size = new System.Drawing.Size(700, 500);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             this.pictureBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDoubleClick);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
@@ -75,7 +75,7 @@ namespace IntelligentScissors
             this.pictureBox2.Location = new System.Drawing.Point(4, 4);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(650, 450);
+            this.pictureBox2.Size = new System.Drawing.Size(700, 500);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox2.TabIndex = 1;
             this.pictureBox2.TabStop = false;
@@ -96,10 +96,10 @@ namespace IntelligentScissors
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(279, 547);
+            this.label1.Location = new System.Drawing.Point(275, 683);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(162, 24);
+            this.label1.Size = new System.Drawing.Size(130, 19);
             this.label1.TabIndex = 3;
             this.label1.Text = "Original Image";
             // 
@@ -110,7 +110,7 @@ namespace IntelligentScissors
             this.txtHeight.Margin = new System.Windows.Forms.Padding(4);
             this.txtHeight.Name = "txtHeight";
             this.txtHeight.ReadOnly = true;
-            this.txtHeight.Size = new System.Drawing.Size(75, 27);
+            this.txtHeight.Size = new System.Drawing.Size(75, 23);
             this.txtHeight.TabIndex = 8;
             // 
             // txtWidth
@@ -120,7 +120,7 @@ namespace IntelligentScissors
             this.txtWidth.Margin = new System.Windows.Forms.Padding(4);
             this.txtWidth.Name = "txtWidth";
             this.txtWidth.ReadOnly = true;
-            this.txtWidth.Size = new System.Drawing.Size(75, 27);
+            this.txtWidth.Size = new System.Drawing.Size(75, 23);
             this.txtWidth.TabIndex = 11;
             // 
             // label5
@@ -130,7 +130,7 @@ namespace IntelligentScissors
             this.label5.Location = new System.Drawing.Point(456, 744);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 21);
+            this.label5.Size = new System.Drawing.Size(45, 16);
             this.label5.TabIndex = 12;
             this.label5.Text = "Width";
             // 
@@ -141,7 +141,7 @@ namespace IntelligentScissors
             this.label6.Location = new System.Drawing.Point(456, 791);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 21);
+            this.label6.Size = new System.Drawing.Size(49, 16);
             this.label6.TabIndex = 13;
             this.label6.Text = "Height";
             // 
@@ -154,13 +154,13 @@ namespace IntelligentScissors
             this.panel1.Location = new System.Drawing.Point(16, 15);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(700, 500);
+            this.panel1.Size = new System.Drawing.Size(750, 600);
             this.panel1.TabIndex = 15;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(786, 532);
+            this.label3.Location = new System.Drawing.Point(782, 668);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 16);
             this.label3.TabIndex = 4;
@@ -169,7 +169,7 @@ namespace IntelligentScissors
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(587, 532);
+            this.label2.Location = new System.Drawing.Point(583, 668);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 16);
             this.label2.TabIndex = 3;
@@ -178,7 +178,7 @@ namespace IntelligentScissors
             // Cursor_Y
             // 
             this.Cursor_Y.Enabled = false;
-            this.Cursor_Y.Location = new System.Drawing.Point(789, 551);
+            this.Cursor_Y.Location = new System.Drawing.Point(785, 687);
             this.Cursor_Y.Name = "Cursor_Y";
             this.Cursor_Y.Size = new System.Drawing.Size(100, 22);
             this.Cursor_Y.TabIndex = 2;
@@ -188,40 +188,28 @@ namespace IntelligentScissors
             this.panel2.AutoScroll = true;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.pictureBox2);
-            this.panel2.Location = new System.Drawing.Point(773, 15);
+            this.panel2.Location = new System.Drawing.Point(785, 15);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(700, 500);
+            this.panel2.Size = new System.Drawing.Size(750, 600);
             this.panel2.TabIndex = 16;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(1060, 551);
+            this.label4.Location = new System.Drawing.Point(1056, 687);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(154, 24);
+            this.label4.Size = new System.Drawing.Size(124, 19);
             this.label4.TabIndex = 17;
             this.label4.Text = "Croped Image";
-            // 
-            // FinishCropping
-            // 
-            this.FinishCropping.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FinishCropping.Location = new System.Drawing.Point(887, 741);
-            this.FinishCropping.Name = "FinishCropping";
-            this.FinishCropping.Size = new System.Drawing.Size(118, 76);
-            this.FinishCropping.TabIndex = 18;
-            this.FinishCropping.Text = "Finish Cropping";
-            this.FinishCropping.UseVisualStyleBackColor = true;
-            this.FinishCropping.Click += new System.EventHandler(this.FinishCropping_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1482, 846);
-            this.Controls.Add(this.FinishCropping);
+            this.ClientSize = new System.Drawing.Size(1568, 852);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
@@ -266,7 +254,6 @@ namespace IntelligentScissors
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button FinishCropping;
     }
 }
 
