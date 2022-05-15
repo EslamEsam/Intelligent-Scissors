@@ -17,6 +17,7 @@ namespace IntelligentScissors
         }
 
         RGBPixel[,] ImageMatrix;
+        nodes[,] nodes;
 
         public void DrawCircl(Point index, Bitmap img, int Radius)
         {
@@ -30,6 +31,7 @@ namespace IntelligentScissors
         
         string FilePath;
         Graph graph;
+        graph2 graph2 = new graph2();
         Bitmap global_img;
         Point[] anchors = new Point[1000];
         int anchorsCounter = 0;
@@ -51,9 +53,29 @@ namespace IntelligentScissors
                 string OpenedFilePath = openFileDialog1.FileName;
                 ImageMatrix = ImageOperations.OpenImage(OpenedFilePath);
                 FilePath = OpenedFilePath;
-                graph.Add_vertices(ImageMatrix);
-                graph.Add_edges(ImageMatrix);
+
                 Console.SetBufferSize(Int16.MaxValue - 1, Int16.MaxValue - 1);
+                var timer = new System.Diagnostics.Stopwatch();
+                // if (!bigger_graph) { 
+                timer.Start();
+                nodes = graph2.Add_vertices(ImageMatrix);
+                //graph.Add_vertices(ImageMatrix);
+                //graph.Add_edges(ImageMatrix);
+                timer.Stop();
+                //int samar = 0;
+                //for (int i = 0; i < ImageMatrix.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < ImageMatrix.GetLength(1); j++)
+                //    {
+                //        Console.WriteLine("Node : " + samar);
+                //        samar++;
+                //        Console.WriteLine("right weight : " + nodes[i, j].weight_right);
+                //        Console.WriteLine("down weight : " + nodes[i, j].weight_down);
+                //        Console.WriteLine("left weight : " + nodes[i, j].weight_left);
+                //        Console.WriteLine("up weight : " + nodes[i, j].weight_up);
+                //    }
+                //}
+                Console.WriteLine("Time taken to add vertices and edges: {0}", timer.Elapsed);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
             }
             txtWidth.Text = ImageOperations.GetWidth(ImageMatrix).ToString();

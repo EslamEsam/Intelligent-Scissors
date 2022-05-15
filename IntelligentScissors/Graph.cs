@@ -17,10 +17,10 @@ namespace IntelligentScissors
     internal class Graph
     {
         public Dictionary<string, List<edge_weight>> graph = new Dictionary<string, List<edge_weight>>();
-        List<edge_weight> edges = new List<edge_weight>();
+        //List<edge_weight> edges = new List<edge_weight>();
         public void Add_vertices(RGBPixel[,] ImageMatrix)
         {
-            
+
             for (int i = 0; i < ImageMatrix.GetLength(1); i++)
             {
                 for (int j = 0; j < ImageMatrix.GetLength(0); j++)
@@ -29,7 +29,7 @@ namespace IntelligentScissors
                     graph.Add(key, new List<edge_weight>());
                 }
             }
-            
+
         }
 
         public void Add_edges(RGBPixel[,] ImageMatrix)
@@ -41,7 +41,8 @@ namespace IntelligentScissors
                 for (int j = 0; j < ImageMatrix.GetLength(0); j++)
                 {
                     string key = i.ToString() + "," + j.ToString();
-                    
+
+                    //graph.Add(key, new List<edge_weight>());
                     Vector2D weight = new Vector2D();
                     weight = ImageOperations.CalculatePixelEnergies(i, j, ImageMatrix);
                     weight.X = 1 / weight.X;
