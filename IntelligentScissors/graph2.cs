@@ -20,7 +20,6 @@ namespace IntelligentScissors
         public nodes[,] Add_vertices(RGBPixel[,] ImageMatrix)
         {
             nodes[,] graph = new nodes[ImageMatrix.GetLength(0), ImageMatrix.GetLength(1)];
-            nodes node;
             int width = ImageMatrix.GetLength(1);
             int height = ImageMatrix.GetLength(0);
             for (int i = 0; i < height; i++)

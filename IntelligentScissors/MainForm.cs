@@ -75,6 +75,7 @@ namespace IntelligentScissors
                 //        Console.WriteLine("up weight : " + nodes[i, j].weight_up);
                 //    }
                 //}
+
                 Console.WriteLine("Time taken to add vertices and edges: {0}", timer.Elapsed);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
             }
@@ -82,6 +83,7 @@ namespace IntelligentScissors
             txtHeight.Text = ImageOperations.GetHeight(ImageMatrix).ToString();
             Bitmap img = new Bitmap(FilePath);
             global_img = img;
+           
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
@@ -105,10 +107,12 @@ namespace IntelligentScissors
             pictureBox2.Image = global_img;
             if (anchorsCounter >= 2)
             {
-                SPtest sp = new SPtest();
-                //ShortestPath sp = new ShortestPath();
+                //SPtest sp = new SPtest();
+                ShortestPath sp = new ShortestPath();
                 Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-                shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], graph.graph, ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+                shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes, 
+                    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+    
                 graphics = Graphics.FromImage((Image)global_img);
                 redPen = new Pen(Color.Blue, 3);
 
@@ -116,6 +120,7 @@ namespace IntelligentScissors
                 int j_Free = anchors[anchorsCounter - 1].Y;
                 string FreePoint = i_Free + "," + j_Free;
                 string LastPoint;
+                //int FreePoint = i_Free * ImageOperations.GetWidth(ImageMatrix) + j_Free;
                 if (shortest_path.ContainsKey(FreePoint))
                 {
                     LastPoint = shortest_path[FreePoint].Key;
@@ -138,16 +143,20 @@ namespace IntelligentScissors
 
         private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            SPtest sp = new SPtest();
+            ShortestPath sp = new ShortestPath();
             Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-            shortest_path = sp.calculateShortestPath(anchors[0], anchors[anchorsCounter - 1], graph.graph,
-            ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+            //shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes,
+            //    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+            shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 1 ], anchors[0], nodes,
+                ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+
             Graphics graphics = Graphics.FromImage((Image)global_img);
             Pen redPen = new Pen(Color.Red, 5);
-            Point point = anchors[anchorsCounter - 1];
-            int i_Free = anchors[anchorsCounter - 1].X;
-            int j_Free = anchors[anchorsCounter - 1].Y;
+            Point point = anchors[0];
+            int i_Free = anchors[0].X;
+            int j_Free = anchors[0].Y;
             string FreePoint = i_Free + "," + j_Free;
+            
             string LastPoint;
             if (shortest_path.ContainsKey(FreePoint))
             {
