@@ -110,7 +110,7 @@ namespace IntelligentScissors
                     ShortestPath sp = new ShortestPath();
                     Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
                     shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes,
-                        ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+                        ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
                     graphics = Graphics.FromImage((Image)global_img);
                     redPen = new Pen(Color.Blue, 2);
@@ -167,7 +167,7 @@ namespace IntelligentScissors
                         ShortestPath sp = new ShortestPath();
                         Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
                         shortest_path = sp.calculateShortestPath(anchors[i], anchors[i+1], nodes,
-                            ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+                            ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
                         graphics = Graphics.FromImage((Image)img);
                         redPen = new Pen(Color.Red, 3);
@@ -214,7 +214,7 @@ namespace IntelligentScissors
             //shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes,
             //    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
             shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 1 ], anchors[0], nodes,
-                ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
+                ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
             Graphics graphics = Graphics.FromImage((Image)global_img);
             Pen redPen = new Pen(Color.Red, 5);
