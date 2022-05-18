@@ -93,7 +93,7 @@ namespace IntelligentScissors
                 Point point = new Point(e.X, e.Y);
                 Console.WriteLine("Anchor X : " + point.X + "Anchor Y : " + point.Y);
                 Graphics graphics = Graphics.FromImage((Image)global_img);
-                Pen redPen = new Pen(Color.Red, 3);
+                Pen redPen = new Pen(Color.Red, 2);
                 // Show the coordinates of the mouse click on the label, label1.
                 Rectangle rect = new Rectangle(point.X - 4, point.Y - 4, 4, 4);
                 anchors[anchorsCounter].X = point.X;
@@ -113,7 +113,7 @@ namespace IntelligentScissors
                         ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
 
                     graphics = Graphics.FromImage((Image)global_img);
-                    redPen = new Pen(Color.Blue, 3);
+                    redPen = new Pen(Color.Blue, 2);
 
                     int i_Free = anchors[anchorsCounter - 1].X;
                     int j_Free = anchors[anchorsCounter - 1].Y;
@@ -263,6 +263,34 @@ namespace IntelligentScissors
 
         }
 
-       
+        /*
+         * private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            Cursor_Y.Text = e.Y.ToString();
+            Cursor_X.Text = e.X.ToString();
+            if (anchorsCounter >= 1)
+            {
+                Bitmap line_img = new Bitmap(FilePath);
+                Point point = new Point(anchors[anchorsCounter - 1].X, anchors[anchorsCounter - 1].Y);
+                Graphics graphics = Graphics.FromImage(line_img);
+                Pen redPen = new Pen(Color.Black, 2);
+                Point tempPoint = new Point(e.X, e.Y);
+                graphics.DrawLine(redPen, point, tempPoint);
+                pictureBox1.Image = line_img;
+
+            }
+
+        }
+        */
+
+        private void Clear_Click(object sender, EventArgs e)
+        {
+            Bitmap img = new Bitmap(FilePath);
+            global_img = img;
+            pictureBox1.Image = global_img;
+            pictureBox2.Image = global_img;
+            anchorsCounter = 0;
+            Array.Clear(anchors, 0, anchors.Length);
+        }
     }
 }

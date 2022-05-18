@@ -38,6 +38,8 @@ namespace IntelligentScissors
                 int i_vertex = int.Parse(si1);
                 int j_vertex = int.Parse(sj1);
 
+                if (j_vertex >= height || i_vertex >= width)
+                    continue;
                 neighbors = graph[j_vertex , i_vertex];
 
                 if (j_vertex != width - 1)
