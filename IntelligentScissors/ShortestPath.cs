@@ -9,12 +9,22 @@ namespace IntelligentScissors
 {
     class ShortestPath
     {
-        public Dictionary<string, KeyValuePair<string, double>> calculateShortestPath(Point AnchorPoint, Point FreePoint
+        public Dictionary<string, KeyValuePair<string, double>> calculateShortestPath(ref Point AnchorPoint, ref Point FreePoint
             , nodes[,] graph, int width, int height, Bitmap global_img)
         {
             Dictionary<string, bool> reachedShortestPath = new Dictionary<string, bool>();
             Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
             PriorityQueue priorityQueue = new PriorityQueue();
+
+            if (graph[AnchorPoint.Y, AnchorPoint.X].weight_right == graph[AnchorPoint.Y, AnchorPoint.X].weight_down
+               && graph[AnchorPoint.Y, AnchorPoint.X].weight_down == graph[AnchorPoint.Y, AnchorPoint.X].weight_up
+               && graph[AnchorPoint.Y, AnchorPoint.X].weight_up == graph[AnchorPoint.Y, AnchorPoint.X].weight_left
+               && graph[FreePoint.Y, FreePoint.X].weight_right == graph[FreePoint.Y, FreePoint.X].weight_down
+                && graph[FreePoint.Y, FreePoint.X].weight_down == graph[FreePoint.Y, FreePoint.X].weight_up
+                && graph[FreePoint.Y, FreePoint.X].weight_up == graph[FreePoint.Y, FreePoint.X].weight_left)
+            {
+                Handle_calculateShortestPath(ref AnchorPoint, ref FreePoint, graph, width, height, global_img);
+            }
             string start = AnchorPoint.X.ToString() + "," + AnchorPoint.Y.ToString();
             edge_weight root;
             root.edge = start;
@@ -27,18 +37,8 @@ namespace IntelligentScissors
             edge_weight neighbor_left;
             edge_weight neighbor_up;
 
-            if (graph[AnchorPoint.Y, AnchorPoint.X].weight_right == graph[AnchorPoint.Y, AnchorPoint.X].weight_down
-               && graph[AnchorPoint.Y, AnchorPoint.X].weight_down == graph[AnchorPoint.Y, AnchorPoint.X].weight_up
-               && graph[AnchorPoint.Y, AnchorPoint.X].weight_up == graph[AnchorPoint.Y, AnchorPoint.X].weight_left)
-            {
-                if (graph[FreePoint.Y, FreePoint.X].weight_right == graph[FreePoint.Y, FreePoint.X].weight_down
-            && graph[FreePoint.Y, FreePoint.X].weight_down == graph[FreePoint.Y, FreePoint.X].weight_up
-            && graph[FreePoint.Y, FreePoint.X].weight_up == graph[FreePoint.Y, FreePoint.X].weight_left)
 
-                    return Handle_calculateShortestPath(AnchorPoint, FreePoint, graph, width, height, global_img);
-            }
-
-                while (priorityQueue.Count() != 0)
+            while (priorityQueue.Count() != 0)
             {
                 edge_weight vertex = priorityQueue.Dequeue();
                 reachedShortestPath.Add(vertex.edge, true);
@@ -60,7 +60,8 @@ namespace IntelligentScissors
                     {
                         if (!reachedShortestPath.ContainsKey(neighbor_right.edge))
                         {
-                            AddToPriority(neighbor_right, root, ref priorityQueue, vertex, ref shortest_path , graph);
+                            AddToPriority(neighbor_right, root, ref priorityQueue, vertex,
+                                ref shortest_path , graph , height , width);
                         }
                     }
 
@@ -75,7 +76,8 @@ namespace IntelligentScissors
 
                         if (!reachedShortestPath.ContainsKey(neighbor_down.edge))
                         {
-                            AddToPriority(neighbor_down, root, ref priorityQueue, vertex, ref shortest_path , graph);
+                            AddToPriority(neighbor_down, root, ref priorityQueue, vertex, 
+                                ref shortest_path , graph , height , width);
                         }
                     }
                 }
@@ -89,7 +91,8 @@ namespace IntelligentScissors
 
                         if (!reachedShortestPath.ContainsKey(neighbor_left.edge))
                         {
-                            AddToPriority(neighbor_left, root, ref priorityQueue, vertex, ref shortest_path , graph);
+                            AddToPriority(neighbor_left, root, ref priorityQueue, vertex,
+                                ref shortest_path , graph , height , width);
                         }
                     }
 
@@ -104,7 +107,8 @@ namespace IntelligentScissors
 
                         if (!reachedShortestPath.ContainsKey(neighbor_up.edge))
                         {
-                            AddToPriority(neighbor_up, root, ref priorityQueue, vertex, ref shortest_path , graph);
+                            AddToPriority(neighbor_up, root, ref priorityQueue, vertex,
+                                ref shortest_path , graph , height , width);
                         }
                     }
                 }
@@ -118,117 +122,236 @@ namespace IntelligentScissors
         }
 
         public void AddToPriority(edge_weight item, edge_weight root, ref PriorityQueue priorityQueue
-            , edge_weight vertex, ref Dictionary<string, KeyValuePair<string, double>> shortest_path, nodes[,] graph)
+            , edge_weight vertex, ref Dictionary<string, KeyValuePair<string, double>> shortest_path, nodes[,] graph 
+            , int height , int width)
         {
             string si1 = item.edge.Substring(0, item.edge.IndexOf(","));
             string sj1 = item.edge.Substring(item.edge.IndexOf(",") + 1);
             int i_item = int.Parse(si1);
             int j_item = int.Parse(sj1);
-
-            if (graph[j_item, i_item].weight_right != graph[j_item, i_item].weight_left ||
-                   graph[j_item, i_item].weight_left != graph[j_item, i_item].weight_up ||
-                   graph[j_item, i_item].weight_up != graph[j_item, i_item].weight_down)
+            if (j_item < height && i_item < width)
             {
-                if (item.edge != root.edge && !priorityQueue.ContainsItem(item.edge))
+                if (graph[j_item, i_item].weight_right != graph[j_item, i_item].weight_left ||
+                       graph[j_item, i_item].weight_left != graph[j_item, i_item].weight_up ||
+                       graph[j_item, i_item].weight_up != graph[j_item, i_item].weight_down)
                 {
+                    if (item.edge != root.edge && !priorityQueue.ContainsItem(item.edge))
+                    {
 
-                    edge_weight edge;
-                    edge.edge = item.edge;
-                    edge.weight = double.PositiveInfinity;
-                    priorityQueue.Enqueue(edge);
+                        edge_weight edge;
+                        edge.edge = item.edge;
+                        edge.weight = double.PositiveInfinity;
+                        priorityQueue.Enqueue(edge);
 
-                }
-                double newDistance = shortest_path[vertex.edge].Value + item.weight;
-                if (!shortest_path.ContainsKey(item.edge))
-                {
-                    shortest_path.Add(item.edge, new KeyValuePair<string, double>(vertex.edge, newDistance));
-                    priorityQueue.Update(item.edge, newDistance);
+                    }
+                    double newDistance = shortest_path[vertex.edge].Value + item.weight;
+                    if (!shortest_path.ContainsKey(item.edge))
+                    {
+                        shortest_path.Add(item.edge, new KeyValuePair<string, double>(vertex.edge, newDistance));
+                        priorityQueue.Update(item.edge, newDistance);
 
-                }
-                else if ((newDistance < shortest_path[item.edge].Value))
-                {
+                    }
+                    else if ((newDistance < shortest_path[item.edge].Value))
+                    {
 
-                    priorityQueue.Update(item.edge, newDistance);
-                    shortest_path.Remove(item.edge);
-                    shortest_path.Add(item.edge, new KeyValuePair<string, double>(vertex.edge, newDistance));
+                        priorityQueue.Update(item.edge, newDistance);
+                        shortest_path.Remove(item.edge);
+                        shortest_path.Add(item.edge, new KeyValuePair<string, double>(vertex.edge, newDistance));
 
+                    }
                 }
             }
         }
 
-        public Dictionary<string, KeyValuePair<string, double>> Handle_calculateShortestPath( Point AnchorPoint, Point FreePoint
-                    , nodes[,] graph, int width, int height, Bitmap global_img)
+        public void Handle_calculateShortestPath( ref Point AnchorPoint, ref Point FreePoint
+                    , nodes[,] graph, int width, int height, Bitmap global_img )
         {
-            Dictionary<string, bool> reachedShortestPath = new Dictionary<string, bool>();
-            Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-            PriorityQueue priorityQueue = new PriorityQueue();
             Graphics graphics = Graphics.FromImage((Image)global_img);
             Pen redPen = new Pen(Color.Red, 2);
-
-            if (graph[AnchorPoint.Y, AnchorPoint.X].weight_right == graph[AnchorPoint.Y, AnchorPoint.X].weight_down
-                && graph[AnchorPoint.Y, AnchorPoint.X].weight_down == graph[AnchorPoint.Y, AnchorPoint.X].weight_up
-                && graph[AnchorPoint.Y, AnchorPoint.X].weight_up == graph[AnchorPoint.Y, AnchorPoint.X].weight_left)
+            bool stopper = false;
+            while (true)
             {
+                int i = AnchorPoint.Y, j = AnchorPoint.X;
 
-
-                bool stopper = false;
-                while (true)
+                while (i < height - 2)
                 {
-                    int i = AnchorPoint.Y, j = AnchorPoint.X;
 
-                    while (i != height - 1)
+                    if (graph[i, j].weight_down != graph[i + 1, j].weight_down)
                     {
-
-                        if (graph[i, j].weight_down != graph[i + 1, j].weight_down)
-                        {
-                            Point tempPoint = new Point(j, i + 2);
-                            graphics.DrawLine(redPen, AnchorPoint, tempPoint);
-                            AnchorPoint.Y = i + 2;
-                            stopper = true;
-                            break;
-                        }
-                        else
-                            i++;
-                    }
-                    if (stopper == true)
+                        Point tempPoint = new Point(j, i + 2);
+                        graphics.DrawLine(redPen, AnchorPoint, tempPoint);
+                        AnchorPoint.Y = i + 2;
+                        stopper = true;
                         break;
+                    }
+                    else
+                        i++;
+                }
+                if (stopper == true)
+                    break;
 
-                    while (j != width - 1)
+
+                i = AnchorPoint.Y;
+                j = AnchorPoint.X;
+                while (j < width - 2)
+                {
+                    if (graph[i, j].weight_right != graph[i, j + 1].weight_right)
                     {
-                        //if (graph[i, j].weight_right != graph[i + 1, j].weight_down)
-                        //{
-                        //    Point tempPoint = new Point(j, i + 2);
-                        //    graphics.DrawLine(redPen, AnchorPoint, tempPoint);
-                        //    AnchorPoint.Y = i + 2;
-                        //    stopper = true;
-                        //    break;
-                        //}
-                        //else
-                        //    i++;
-
-                    }
-                    if (stopper == true)
+                        Point tempPoint = new Point(j + 2, i);
+                        graphics.DrawLine(redPen, AnchorPoint, tempPoint);
+                        AnchorPoint.X = j + 2;
+                        stopper = true;
                         break;
-
-                    while (j != 0)
-                    {
-
-
                     }
-                    if (stopper == true)
-                        break;
-
-                    while (i != 0)
-                    {
-
-                    }
-                    if (stopper == true)
-                        break;
-
+                    else
+                        j++;
 
                 }
+                if (stopper == true)
+                    break;
+
+
+                i = AnchorPoint.Y;
+                j = AnchorPoint.X;
+                while (j > 1)
+                {
+                    if (graph[i, j].weight_left != graph[i, j - 1].weight_left)
+                    {
+                        Point tempPoint = new Point(j - 2, i);
+                        graphics.DrawLine(redPen, AnchorPoint, tempPoint);
+                        AnchorPoint.X = j - 2;
+                        stopper = true;
+                        break;
+                    }
+                    else
+                        j--;
+
+                }
+                if (stopper == true)
+                    break;
+
+
+                i = AnchorPoint.Y;
+                j = AnchorPoint.X;
+                while (i > 1)
+                {
+                    if (graph[i, j].weight_up != graph[i - 1 , j].weight_up)
+                    {
+                        Point tempPoint = new Point(j, i - 2);
+                        graphics.DrawLine(redPen, AnchorPoint, tempPoint);
+                        AnchorPoint.Y = i - 2;
+                        stopper = true;
+                        break;
+                    }
+                    else
+                        i--;
+                }
+                if (stopper == true)
+                    break;
+
+
             }
-            string start = AnchorPoint.X.ToString() + "," + AnchorPoint.Y.ToString();
+
+            
+            while (true)
+            {
+                int i = FreePoint.Y, j = FreePoint.X;
+                stopper = false;
+                while (i < height - 2)
+                {
+
+                    if (graph[i, j].weight_down != graph[i + 1, j].weight_down)
+                    {
+                        Point tempPoint = new Point(j, i + 2);
+                        graphics.DrawLine(redPen, FreePoint, tempPoint);
+                        FreePoint.Y = i + 2;
+                        stopper = true;
+                        break;
+                    }
+                    else
+                        i++;
+                }
+                if (stopper == true)
+                    break;
+
+
+                i = FreePoint.Y;
+                j = FreePoint.X;
+                while (j < width - 2)
+                {
+                    if (graph[i, j].weight_right != graph[i, j + 1].weight_right)
+                    {
+                        Point tempPoint = new Point(j + 2, i);
+                        graphics.DrawLine(redPen, FreePoint , tempPoint);
+                        FreePoint.X = j + 2;
+                        stopper = true;
+                        break;
+                    }
+                    else
+                        j++;
+
+                }
+                if (stopper == true)
+                    break;
+
+
+                i = FreePoint.Y;
+                j = FreePoint.X;
+                while (j > 1)
+                {
+
+                    if (graph[i, j].weight_left != graph[i, j - 1].weight_left)
+                    {
+                        Point tempPoint = new Point(j - 2, i);
+                        graphics.DrawLine(redPen, FreePoint, tempPoint);
+                        FreePoint.X = j - 2;
+                        stopper = true;
+                        break;
+                    }
+                    else
+                        j--;
+                }
+                if (stopper == true)
+                    break;
+
+
+                i = FreePoint.Y;
+                j = FreePoint.X;
+                while (i > 1)
+                {
+
+                    if (graph[i, j].weight_up != graph[i - 1, j].weight_up)
+                    {
+                        Point tempPoint = new Point(j, i - 2);
+                        graphics.DrawLine(redPen, FreePoint, tempPoint);
+                        FreePoint.Y = i - 2;
+                        stopper = true;
+                        break;
+                    }
+                    else
+                        i--;
+                }
+                if (stopper == true)
+                    break;
+
+
+            }
+
+
+
+        }
+
+
+
+
+    }
+
+}
+
+
+/*
+ * 
+ * string start = AnchorPoint.X.ToString() + "," + AnchorPoint.Y.ToString();
             edge_weight root;
             root.edge = start;
             root.weight = 0;
@@ -339,15 +462,7 @@ namespace IntelligentScissors
             }
             return shortest_path;
 
-        }
-
-
-
-
-    }
-
-}
-
+ */
 
 
 /*

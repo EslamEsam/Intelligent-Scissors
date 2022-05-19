@@ -109,7 +109,7 @@ namespace IntelligentScissors
                     //SPtest sp = new SPtest();
                     ShortestPath sp = new ShortestPath();
                     Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-                    shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes,
+                    shortest_path = sp.calculateShortestPath(ref anchors[anchorsCounter - 2],ref anchors[anchorsCounter - 1], nodes,
                         ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
                     graphics = Graphics.FromImage((Image)global_img);
@@ -119,6 +119,7 @@ namespace IntelligentScissors
                     int j_Free = anchors[anchorsCounter - 1].Y;
                     string FreePoint = i_Free + "," + j_Free;
                     string LastPoint;
+                    point = anchors[anchorsCounter - 1];
                     //int FreePoint = i_Free * ImageOperations.GetWidth(ImageMatrix) + j_Free;
                     if (shortest_path.ContainsKey(FreePoint))
                     {
@@ -166,7 +167,7 @@ namespace IntelligentScissors
                         //SPtest sp = new SPtest();
                         ShortestPath sp = new ShortestPath();
                         Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-                        shortest_path = sp.calculateShortestPath(anchors[i], anchors[i+1], nodes,
+                        shortest_path = sp.calculateShortestPath(ref anchors[i], ref anchors[i+1], nodes,
                             ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
                         graphics = Graphics.FromImage((Image)img);
@@ -213,7 +214,7 @@ namespace IntelligentScissors
             Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
             //shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes,
             //    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
-            shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 1 ], anchors[0], nodes,
+            shortest_path = sp.calculateShortestPath(ref anchors[anchorsCounter - 1 ], ref anchors[0], nodes,
                 ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
             Graphics graphics = Graphics.FromImage((Image)global_img);
@@ -243,8 +244,27 @@ namespace IntelligentScissors
             }
         }
 
-        
-        
+
+
+        //private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    Cursor_Y.Text = e.Y.ToString();
+        //    Cursor_X.Text = e.X.ToString();
+        //    if (anchorsCounter >= 1)
+        //    {
+        //        Bitmap line_img = new Bitmap(FilePath);
+        //        Point point = new Point(anchors[anchorsCounter - 1].X, anchors[anchorsCounter - 1].Y);
+        //        Graphics graphics = Graphics.FromImage(line_img);
+        //        Pen redPen = new Pen(Color.Black, 2);
+        //        Point tempPoint = new Point(e.X, e.Y);
+        //        graphics.DrawLine(redPen, point, tempPoint);
+        //        pictureBox1.Image = line_img;
+
+        //    }
+
+        //}
+
+
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             Cursor_Y.Text = e.Y.ToString();
@@ -252,12 +272,41 @@ namespace IntelligentScissors
             if (anchorsCounter >= 1)
             {
                 Bitmap line_img = new Bitmap(FilePath);
-                Point point = new Point(anchors[anchorsCounter - 1].X, anchors[anchorsCounter - 1].Y);
+                Point anchorpoint = new Point(anchors[anchorsCounter - 1].X, anchors[anchorsCounter - 1].Y);
                 Graphics graphics = Graphics.FromImage(line_img);
-                Pen redPen = new Pen(Color.Black, 2);
-                Point tempPoint = new Point(e.X, e.Y);
-                graphics.DrawLine(redPen, point, tempPoint);
+                Pen redPen = new Pen(Color.Red, 2);
+                Point freePoint = new Point(e.X, e.Y);
+
+                ShortestPath sp = new ShortestPath();
+                Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
+                shortest_path = sp.calculateShortestPath(ref anchorpoint, ref freePoint, nodes,
+                    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix), global_img);
+
+                int i_Free = freePoint.X;
+                int j_Free = freePoint.Y;
+                string FreePoint = i_Free + "," + j_Free;
+
+                string LastPoint;
+                if (shortest_path.ContainsKey(FreePoint))
+                {
+                    LastPoint = shortest_path[FreePoint].Key;
+                    while (LastPoint != "null")
+                    {
+                        string si_Last = LastPoint.Substring(0, LastPoint.IndexOf(","));
+                        int i_Last = int.Parse(si_Last);
+                        string sj_Last = LastPoint.Substring(LastPoint.IndexOf(",") + 1);
+                        int j_Last = int.Parse(sj_Last);
+                        Point tempPoint = new Point(i_Last, j_Last);
+                        graphics.DrawLine(redPen, freePoint, tempPoint);
+                        pictureBox1.Image = global_img;
+                        LastPoint = shortest_path[LastPoint].Key;
+                        freePoint = tempPoint;
+
+                    }
+                }
                 pictureBox1.Image = line_img;
+
+
 
             }
 
