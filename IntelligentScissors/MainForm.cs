@@ -15,10 +15,6 @@ namespace IntelligentScissors
         {
             InitializeComponent();
         }
-
-        RGBPixel[,] ImageMatrix;
-        nodes[,] nodes;
-
         public void DrawCircl(Point index, Bitmap img, int Radius)
         {
             for (int i = 0; i < 360; i++)
@@ -28,10 +24,11 @@ namespace IntelligentScissors
                 img.SetPixel((int)x, (int)y, Color.Red);
             }
         }
-        
+
+        RGBPixel[,] ImageMatrix;
+        nodes[,] nodes;
         string FilePath;
-        Graph graph;
-        graph2 graph2 = new graph2();
+        graph2 graph = new graph2();
         Bitmap global_img;
         Point[] anchors = new Point[1000];
         int anchorsCounter = 0;
@@ -40,7 +37,7 @@ namespace IntelligentScissors
         private void btnOpen_Click(object sender, EventArgs e)
         {
             FilePath = "";
-            graph = new Graph();
+            graph = new graph2();
             pictureBox1.Image = null;
             pictureBox2.Image = null;
             anchorsCounter = 0;
@@ -56,25 +53,35 @@ namespace IntelligentScissors
 
                 Console.SetBufferSize(Int16.MaxValue - 1, Int16.MaxValue - 1);
                 var timer = new System.Diagnostics.Stopwatch();
-                // if (!bigger_graph) { 
                 timer.Start();
-                nodes = graph2.Add_vertices(ImageMatrix);
-                //graph.Add_vertices(ImageMatrix);
-                //graph.Add_edges(ImageMatrix);
+                nodes = graph.Add_vertices(ImageMatrix);
                 timer.Stop();
-                //int samar = 0;
-                //for (int i = 0; i < ImageMatrix.GetLength(0); i++)
+
+                //FileStream sw = new FileStream("outputText.txt", FileMode.OpenOrCreate, FileAccess.Write);
+                //StreamWriter swr = new StreamWriter(sw, Encoding.Unicode , 1000000);
+                //swr.WriteLine("Graph Construction ");
+                //for (int i = 0; i < ImageOperations.GetHeight(ImageMatrix); i++)
                 //{
-                //    for (int j = 0; j < ImageMatrix.GetLength(1); j++)
+                //    swr.Write("\n");
+                //    for (int j = 0; j < ImageOperations.GetWidth(ImageMatrix); j++)
                 //    {
-                //        Console.WriteLine("Node : " + samar);
-                //        samar++;
-                //        Console.WriteLine("right weight : " + nodes[i, j].weight_right);
-                //        Console.WriteLine("down weight : " + nodes[i, j].weight_down);
-                //        Console.WriteLine("left weight : " + nodes[i, j].weight_left);
-                //        Console.WriteLine("up weight : " + nodes[i, j].weight_up);
+                //        swr.Write("node : " + (i* ImageOperations.GetWidth(ImageMatrix) + j) + "\n");
+                //        if (nodes[i, j].weight_right != 0)
+                //            swr.Write("right weight : " + nodes[i, j].weight_right + "\n");
+                //        if (nodes[i, j].weight_down != 0)
+                //            swr.Write("down weight : " + nodes[i, j].weight_down + "\n");
+                //        if (nodes[i, j].weight_up != 0)
+                //            swr.Write("up weight : " + nodes[i, j].weight_up + "\n");
+                //        if (nodes[i, j].weight_left != 0)
+                //            swr.Write("left weight : " + nodes[i, j].weight_left + "\n");
+
+                //        swr.Write("\n");
                 //    }
+                //    swr.Write("\n");
+                //    swr.AutoFlush = true;
                 //}
+                //swr.Write("Time taken to add vertices and edges: {0}", timer.Elapsed);
+                //sw.Close();
 
                 Console.WriteLine("Time taken to add vertices and edges: {0}", timer.Elapsed);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
@@ -94,19 +101,15 @@ namespace IntelligentScissors
                 Console.WriteLine("Anchor X : " + point.X + "Anchor Y : " + point.Y);
                 Graphics graphics = Graphics.FromImage((Image)global_img);
                 Pen redPen = new Pen(Color.Red, 2);
-                // Show the coordinates of the mouse click on the label, label1.
                 Rectangle rect = new Rectangle(point.X - 4, point.Y - 4, 4, 4);
                 anchors[anchorsCounter].X = point.X;
                 anchors[anchorsCounter].Y = point.Y;
                 anchorsCounter++;
-                // Draw the rectangle, starting with the given coordinates, on the picture box.
                 graphics.DrawRectangle(redPen, rect);
-                // draw a line from the center of the rectangle to the mouse
                 pictureBox1.Image = global_img;
                 pictureBox2.Image = global_img;
                 if (anchorsCounter >= 2)
                 {
-                    //SPtest sp = new SPtest();
                     ShortestPath sp = new ShortestPath();
                     Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
                     shortest_path = sp.calculateShortestPath(ref anchors[anchorsCounter - 2],ref anchors[anchorsCounter - 1], nodes,
@@ -120,7 +123,6 @@ namespace IntelligentScissors
                     string FreePoint = i_Free + "," + j_Free;
                     string LastPoint;
                     point = anchors[anchorsCounter - 1];
-                    //int FreePoint = i_Free * ImageOperations.GetWidth(ImageMatrix) + j_Free;
                     if (shortest_path.ContainsKey(FreePoint))
                     {
                         LastPoint = shortest_path[FreePoint].Key;
@@ -147,9 +149,7 @@ namespace IntelligentScissors
                 Pen redPen = new Pen(Color.Blue, 3);
                 Point point = new Point(anchors[0].X, anchors[0].Y);
                 Rectangle rect = new Rectangle(point.X - 4, point.Y - 4, 4, 4);
-                // Draw the rectangle, starting with the given coordinates, on the picture box.
                 graphics.DrawRectangle(redPen, rect);
-                // Show the coordinates of the mouse click on the label, label1.
                 anchors[anchorsCounter].X = 0;
                 anchors[anchorsCounter].Y = 0;
                 anchorsCounter--;
@@ -158,13 +158,10 @@ namespace IntelligentScissors
                     redPen = new Pen(Color.Blue, 3);
                     point = new Point(anchors[i+1].X, anchors[i+1].Y);
                     rect = new Rectangle(point.X - 4, point.Y - 4, 4, 4);
-                    // Draw the rectangle, starting with the given coordinates, on the picture box.
                     graphics.DrawRectangle(redPen, rect);
-                    // draw a line from the center of the rectangle to the mouse
                     pictureBox2.Image = img;
                     if (anchorsCounter >= 2)
                     {
-                        //SPtest sp = new SPtest();
                         ShortestPath sp = new ShortestPath();
                         Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
                         shortest_path = sp.calculateShortestPath(ref anchors[i], ref anchors[i+1], nodes,
@@ -177,7 +174,6 @@ namespace IntelligentScissors
                         int j_Free = anchors[i+1].Y;
                         string FreePoint = i_Free + "," + j_Free;
                         string LastPoint;
-                        //int FreePoint = i_Free * ImageOperations.GetWidth(ImageMatrix) + j_Free;
                         if (shortest_path.ContainsKey(FreePoint))
                         {
                             LastPoint = shortest_path[FreePoint].Key;
@@ -189,6 +185,7 @@ namespace IntelligentScissors
                                 int j_Last = int.Parse(sj_Last);
                                 Point tempPoint = new Point(i_Last, j_Last);
                                 graphics.DrawLine(redPen, point, tempPoint);
+                                pictureBox1.Image = img;
                                 pictureBox2.Image = img;
                                 LastPoint = shortest_path[LastPoint].Key;
                                 point = tempPoint;
@@ -203,17 +200,11 @@ namespace IntelligentScissors
 
         }
 
-        public void DrawShortestPath()
-        {
-
-        }
-
+        
         private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ShortestPath sp = new ShortestPath();
             Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-            //shortest_path = sp.calculateShortestPath(anchors[anchorsCounter - 2], anchors[anchorsCounter - 1], nodes,
-            //    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix));
             shortest_path = sp.calculateShortestPath(ref anchors[anchorsCounter - 1 ], ref anchors[0], nodes,
                 ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix) , global_img);
 
@@ -237,83 +228,15 @@ namespace IntelligentScissors
                     Point tempPoint = new Point(i_Last, j_Last);
                     graphics.DrawLine(redPen, point, tempPoint);
                     pictureBox2.Image = global_img;
+                    pictureBox1.Image = global_img;
                     LastPoint = shortest_path[LastPoint].Key;
                     point = tempPoint;
 
                 }
             }
         }
-
-
-
-        //private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    Cursor_Y.Text = e.Y.ToString();
-        //    Cursor_X.Text = e.X.ToString();
-        //    if (anchorsCounter >= 1)
-        //    {
-        //        Bitmap line_img = new Bitmap(FilePath);
-        //        Point point = new Point(anchors[anchorsCounter - 1].X, anchors[anchorsCounter - 1].Y);
-        //        Graphics graphics = Graphics.FromImage(line_img);
-        //        Pen redPen = new Pen(Color.Black, 2);
-        //        Point tempPoint = new Point(e.X, e.Y);
-        //        graphics.DrawLine(redPen, point, tempPoint);
-        //        pictureBox1.Image = line_img;
-
-        //    }
-
-        //}
-
-
+        
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
-        {
-            Cursor_Y.Text = e.Y.ToString();
-            Cursor_X.Text = e.X.ToString();
-            if (anchorsCounter >= 1)
-            {
-                Bitmap line_img = new Bitmap(FilePath);
-                Point anchorpoint = new Point(anchors[anchorsCounter - 1].X, anchors[anchorsCounter - 1].Y);
-                Graphics graphics = Graphics.FromImage(line_img);
-                Pen redPen = new Pen(Color.Red, 2);
-                Point freePoint = new Point(e.X, e.Y);
-
-                ShortestPath sp = new ShortestPath();
-                Dictionary<string, KeyValuePair<string, double>> shortest_path = new Dictionary<string, KeyValuePair<string, double>>();
-                shortest_path = sp.calculateShortestPath(ref anchorpoint, ref freePoint, nodes,
-                    ImageOperations.GetWidth(ImageMatrix), ImageOperations.GetHeight(ImageMatrix), global_img);
-
-                int i_Free = freePoint.X;
-                int j_Free = freePoint.Y;
-                string FreePoint = i_Free + "," + j_Free;
-
-                string LastPoint;
-                if (shortest_path.ContainsKey(FreePoint))
-                {
-                    LastPoint = shortest_path[FreePoint].Key;
-                    while (LastPoint != "null")
-                    {
-                        string si_Last = LastPoint.Substring(0, LastPoint.IndexOf(","));
-                        int i_Last = int.Parse(si_Last);
-                        string sj_Last = LastPoint.Substring(LastPoint.IndexOf(",") + 1);
-                        int j_Last = int.Parse(sj_Last);
-                        Point tempPoint = new Point(i_Last, j_Last);
-                        graphics.DrawLine(redPen, freePoint, tempPoint);
-                        pictureBox1.Image = global_img;
-                        LastPoint = shortest_path[LastPoint].Key;
-                        freePoint = tempPoint;
-
-                    }
-                }
-                pictureBox1.Image = line_img;
-
-
-
-            }
-
-        }
-
-        /*
-         * private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             Cursor_Y.Text = e.Y.ToString();
             Cursor_X.Text = e.X.ToString();
@@ -327,10 +250,11 @@ namespace IntelligentScissors
                 graphics.DrawLine(redPen, point, tempPoint);
                 pictureBox1.Image = line_img;
 
+
             }
 
         }
-        */
+        
 
         private void Clear_Click(object sender, EventArgs e)
         {
@@ -343,3 +267,6 @@ namespace IntelligentScissors
         }
     }
 }
+
+
+
